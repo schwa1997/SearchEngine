@@ -1,0 +1,29 @@
+\section{Methodology}
+\label{sec:methodology}
+
+Our search engine can be divided into the following parts: parsing of the documents and queries, indexing,
+text processing (analyzers), and run generation (effective search).\\
+
+Document \textbf{parsing} was performed using the JSON version of the documents.
+On the other hand, query parsing was based on an XML parser devloped by us.\\
+
+In the \textbf{index}, we decided to include four fields: (1) the (processed) English version of the documents, (2) the
+(processed) French version, (3) character N-grams of both versions concatenated, and (4) some NER information extracted
+from the French (original) version.
+As similarity function we have used BM25~\cite{BM25} as it takes into account both term frequency and document length.\\
+
+The text in the fields of our indexes must first be processed, for this we have developed four different \textbf{analyzers}.
+The English analyzer is based on whitespace tokenization, breaking of words and numbers based on special characters,
+lowercasing, applying the Terrier stopword list, query expansion with synonyms based on
+the WordNet synonym map~\cite{wordnet}, and stemming.
+The French analyzer is based on whitespace tokenization, breaking of words and numbers based on special characters,
+lowercasing, applying a French stopword list~\cite{stopword_french} and stemming.
+To generate the character N-grams we consider only the letters of the documents (i.e.\ we discard numbers and punctuation).
+To perform NER we apply NLP techniques based on Apache OpenNLP~\cite{ApacheOpenNLP}, specifically, we used NER applied
+to locations, person names and organizations.\\
+
+We conducted some experiments to generate the runs, i.e., we have tried different combinations of the explained
+techniques.
+Thus, our searcher will always use BM25~\cite{BM25}, but the rest of characteristics will depend on the run it is
+generating.
+See Section~\ref{sec:setup} for more details.

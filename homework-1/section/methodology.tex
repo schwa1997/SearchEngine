@@ -1,0 +1,31 @@
+\section{Methodology}\label{sec:methodology}
+
+Our final search engine can be divided into the following parts: parsing of the documents and queries, indexing,
+text processing (analyzers), and run generation (effective search).\\
+
+Document parsing was performed using the JSON version of the documents.
+On the other hand, query parsing was based on an XML parser.
+See Section~\ref{subsec:parsing} for more details.\\
+
+In the index, we decided to include four fields: (1) the (processed) English version of the documents, (2) the
+(processed)French version, (3) character N-grams of both versions concatenated, and (4) some NER information extracted
+from the French (original) version.
+As similarity function we have used BM25~\cite{BM25} as it takes into account both term frequency and document length.
+See Section~\ref{subsec:index} for more details.\\
+
+The text added to the fields must first be processed, for this we have developed four different analyzers.
+The English analyzer is based on whitespace tokenization, breaking of words and numbers based on special characters,
+lowercasing, applying the Terrier~\cite{OunisEtAl2006} stopword list, query expansion with synonyms based on
+the WordNet synonym map~\cite{wordnet}, and stemming.
+The French analyzer is based on whitespace tokenization, breaking of words and numbers based on special characters,
+lowercasing, applying a French stopword list~\cite{stopword_french} and stemming.
+To generate the character N-grams we consider only the letters of the documents (i.e. we discard numbers and punctuation).
+To perform NER we apply NLP techniques based on Apache OpenNLP~\cite{ApacheOpenNLP}) to the original (French) version of
+the documents.
+Specifically, we used NER applied to locations, person names and organizations.
+See Section~\ref{subsec:analyzer} for more details.\\
+
+We conducted some experiments to generate the runs, i.e., we have tried different combinations of the explained
+techniques.
+Thus, our searcher will always use BM25~\cite{BM25}, but the rest of characteristics depend on the run it is generating.
+See Section~\ref{sec:setup} for more details.

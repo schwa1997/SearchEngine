@@ -1,0 +1,59 @@
+\section{Experimental Setup}\label{sec:setup}
+
+Our work was initiated based on the experimental setups outlined below.
+\begin{itemize}
+	\item Evaluation measures: MAP (Mean Average Precision) and NDCG (Normalized Discounted Cumulative Gain) scores.
+	\item~\citep[Repository]{jihuming}.
+	\item During the development and the experimentation, personal computers were used.
+	\item Java JDK version 17, Apache version 2, Lucene version 9.5, and Maven.
+\end{itemize}
+In order to do different run experiments our team has created several indexes from the provided collection during the development of the final version of the project. In other words, the first created indexes only include several characteristics explained in this report, while the last indexes correspond to the final version of the project.\\
+All the created indexes are \textbf{multilingual}, which allows us to take full advantage of the (bilingual) data collection. Additionally, we did some experiments with character N-grams generating different versions of indexes with 3-grams, 4-grams and 5-grams. Our motivation for experimenting with this was to compare how the size of different character N-grams affect to the effectiveness of our system. 3-grams are able to collecting more specific information about our documents, while 4-grams and 5-grams are more open to the context. An additional functionality of some indexes is query expansion, but as commented, this is only applied to the English body. One index uses Named Entity Recognition which provides not only the search for keywords but also identifying and extracting specific named entities.\\
+In order to do different run experiments our team has created several indexes from the provided collection during the
+development of the final version of the project.
+In other words, the first created indexes only include several of the characteristics explained in this report, while
+the last indexes correspond to the final version of the project.\\
+All the created indexes are multilingual, which allows us to take full advantage of the (bilingual) data collection.
+Additionally, we did some experiments with character 3-grams, 4-grams and 5-grams.
+Our motivation for experimenting with this was to compare how the size of different character N-grams affect to the
+effectiveness of our system. 3-grams are able to collect more specific information, while 4-grams and 5-grams allow considering bigger structures with more context and information. An additional functionality of some indexes is query expansion, but as commented, this is only applied to the English body. Finally, we created indexes with NER, which provides not only the search for keywords but also identifying and extracting specific named entities.\\
+
+The subsequent indexes are:
+\begin{itemize}
+	\item \texttt{2023\_04\_24\_multilingual\_3gram}: both languages of documents, using character 3-grams.
+	\item \texttt{2023\_04\_29\_multilingual\_3gram\_synonym}: both languages, character 3-grams, (English) query expansion with synonyms.
+	\item \texttt{2023\_05\_01\_multilingual\_4gram\_synonym}: both languages, character 4-grams, (English) query expansion with synonyms.
+	\item \texttt{2023\_05\_01\_multilingual\_5gram\_synonym}: both languages, character 5-grams, (English) query expansion with synonyms.
+	\item \texttt{2023\_05\_05\_multilingual\_4gram\_synonym\_ner}: both languages, character 4-grams, (English) query expansion with synonyms, NER techniques.
+\end{itemize}
+
+The indexes also can be found in the following
+\href{https://drive.google.com/drive/folders/1CK_kLeZ5Us3VJe8hiG1vhwPrDs94cLvU?usp=share_link}{Google Drive folder}.\\
+
+After creating indexes, we were able to conduct multiple runs to evaluate the effectiveness of our system.
+These runs not only experiment with some of the techniques specified here, but also consider different versions (English
+or French version) of the queries.
+With them we can compare and analyze different aspects of our system's performance, such as precision and recall.
+We then computed the MAP and NDCG scores for each run, which allowed us to further evaluate the performance of our 
+system.
+The results will be commented in the Section~\ref{sec:results}.
+The runs are the following:
+\begin{itemize}
+	\item \texttt{seupd2223-JIHUMING-01\_en\_en}: English topics; using English body field.
+	\item \texttt{seupd2223-JIHUMING-02\_en\_en\_3gram}: English topics; using English body field and 3-gram field.
+	\item \texttt{seupd2223-JIHUMING-03\_en\_en\_4gram}: English topics; using English body field and 4-gram field.
+	\item \texttt{seupd2223-JIHUMING-04\_en\_en\_5gram}: English topics; using English body field and 5-gram field.
+	\item \texttt{seupd2223-JIHUMING-05\_en\_en\_fr\_5gram}: English topics; using English and French body fileds and 5-gram field.
+	\item \texttt{seupd2223-JIHUMING-06\_en\_en\_4gram\_ner}: English topics; using English body field, 4-gram field and NER technique.
+	\item \texttt{seupd2223-JIHUMING-07\_fr\_fr}: French topics; using French body field.
+	\item \texttt{seupd2223-JIHUMING-08\_fr\_fr\_3gram}: French topics; using French body field and 3-gram field.
+	\item \texttt{seupd2223-JIHUMING-09\_fr\_fr\_4gram}: French topics; using French body field and 4-gram field.
+	\item \texttt{seupd2223-JIHUMING-10\_fr\_fr\_5gram}: French topics; using French body field and 5-gram field.
+	\item \texttt{seupd2223-JIHUMING-11\_fr\_en\_fr\_5gram}: French topics; using English and French body fields and 5-gram field.
+	\item \texttt{seupd2223-JIHUMING-12\_fr\_fr\_4gram\_ner}: French topics; using French body field, 4-gram field and NER technique.
+\end{itemize}
+
+The process of creating the indexes typically took around 1 hour, with the exception of the indexes that included NER,
+which took approximately 16 hours.
+On the other hand, generating the runs was a much quicker process, taking consistently less than a minute and a half to
+complete.

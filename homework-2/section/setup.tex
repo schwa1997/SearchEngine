@@ -1,0 +1,91 @@
+\section{Experimental Setup}
+\label{sec:setup}
+
+In this section, we describe the experimental setup employed in our study.
+
+\subsection{Hardware and Software Environment}\label{subsec:hardware-and-software-environment}
+
+All the code and documentation related to the project were developed and stored in the group's repository
+(\href{https://bitbucket.org/upd-dei-stud-prj/seupd2223-jihuming/src/master/}{https://bitbucket.org/upd-dei-stud-prj/seupd2223-jihuming/src/master/})~\cite{jihuming}.
+The repository, hosted on Bitbucket, provided a centralized location for accessing and managing the project's source
+code and documentation.\\
+
+The development and experimentation phases of the project were conducted using personal computers.
+The specific software tools and versions used included Java JDK version 17, Apache version 2, Lucene version 9.5, and
+Maven.
+These tools and versions were employed to facilitate the implementation and execution of the experimental systems.
+
+\subsection{Evaluation Metrics}\label{subsec:evaluation-metrics}
+
+We computed the Mean Average Precision (MAP) and Normalized Discounted Cumulative Gain (NDCG) scores for all our
+systems' runs on the training collection.
+These scores were used to select the top five systems to be submitted to CLEF.
+Additionally, MAP, NDCG, and Precision at the Recall base (Rprec) scores were computed for the submitted systems' runs
+on the test (short-term and long-term) and held-out collections.
+These metrics provided a reliable estimation of the final performance of our systems.
+
+\subsection{Statistical Analysis}\label{subsec:statistical-analysis}
+
+We performed a statistical analysis using Two-Way ANOVA to assess the Average Precision (AP) of the five submitted
+systems across all the topics on the test and held-out collections.
+Furthermore, pairwise comparisons of the submitted systems were conducted using the Tukey Honestly Significant
+Difference (HSD) test.
+
+\subsection{Indexes}\label{subsec:indexes}
+
+In order to do different run experiments, our team has created several indexes from each of the provided collections
+(train, short-term test, and long-term test).
+Put simply, certain indexes mentioned in this report incorporate only a few of the characteristics discussed, while
+others encompass all the characteristics outlined in the definitive version of the project.\\
+
+All the created indexes are \textbf{multilingual}, which allows us to take full advantage of the (bilingual) data
+collection.
+Additionally, we did some experiments with character N-grams generating different versions of indexes with 3-grams,
+4-grams and 5-grams;
+the motivation was to compare how this parameter affects to the effectiveness of our systems.
+3-grams are able to collecting more local information in our documents, while 4-grams and 5-grams are more open to
+the context.
+An additional functionality of some indexes is query expansion, but as commented, this is only applied to the English
+body.
+One index includes Named Entity Recognition which provides not only the search for keywords but also identifying and
+extracting specific named entities.
+The subsequent indexes are:
+\begin{itemize}
+	\item \texttt{multilingual\_3gram}: both languages of documents, using character 3-grams.
+	\item \texttt{multilingual\_3gram\_synonym}: both languages, character 3-grams, (English) query expansion with synonyms.
+	\item \texttt{multilingual\_4gram\_synonym}: both languages, character 4-grams, (English) query expansion with synonyms.
+	\item \texttt{multilingual\_5gram\_synonym}: both languages, character 5-grams, (English) query expansion with synonyms.
+	\item \texttt{multilingual\_4gram\_synonym\_ner}: both languages, character 4-grams, (English) query expansion with synonyms, NER techniques.
+\end{itemize}
+The indexes also can be found in the following
+\href{https://drive.google.com/drive/folders/1CK_kLeZ5Us3VJe8hiG1vhwPrDs94cLvU?usp=share_link}{Google Drive folder}.
+
+\subsection{Runs}\label{subsec:runs}
+
+After creating the indexes, we were able to conduct multiple runs to evaluate the effectiveness of our system.
+These runs not only experiment with some techniques specified here, but also consider different versions (English
+or French) of the queries.
+With them, we can compare and analyze different aspects of our system's performance, such as precision and recall.
+The runs are the following:
+\begin{itemize}
+	\item \texttt{seupd2223-JIHUMING-01\_en\_en}: English topics; using English body field.
+	\item \texttt{seupd2223-JIHUMING-02\_en\_en\_3gram}: English topics; using English body field and 3-gram field.
+	\item \texttt{seupd2223-JIHUMING-03\_en\_en\_4gram}: English topics; using English body field and 4-gram field.
+	\item \texttt{seupd2223-JIHUMING-04\_en\_en\_5gram}: English topics; using English body field and 5-gram field.
+	\item \texttt{seupd2223-JIHUMING-05\_en\_en\_fr\_5gram}: English topics; using English and French body fileds and 5-gram field.
+	\item \texttt{seupd2223-JIHUMING-06\_en\_en\_4gram\_ner}: English topics; using English body field, 4-gram field and NER information field.
+	\item \texttt{seupd2223-JIHUMING-07\_fr\_fr}: French topics; using French body field.
+	\item \texttt{seupd2223-JIHUMING-08\_fr\_fr\_3gram}: French topics; using French body field and 3-gram field.
+	\item \texttt{seupd2223-JIHUMING-09\_fr\_fr\_4gram}: French topics; using French body field and 4-gram field.
+	\item \texttt{seupd2223-JIHUMING-10\_fr\_fr\_5gram}: French topics; using French body field and 5-gram field.
+	\item \texttt{seupd2223-JIHUMING-11\_fr\_en\_fr\_5gram}: French topics; using English and French body fields and 5-gram field.
+	\item \texttt{seupd2223-JIHUMING-12\_fr\_fr\_4gram\_ner}: French topics; using French body field, 4-gram field and NER information field.
+\end{itemize}
+
+The process of creating the indexes typically took around 1 hour, except the indexes that included NER, which took
+approximately 16 hours.
+On the other hand, generating the runs was a much quicker process, taking consistently less than a minute and a half to
+complete.\\
+
+The mentioned analysis of the runs on the training collection will take place in Section~\ref{subsec:runs_selection}.
+The analysis of the runs on the test collection will take place in Section~\ref{sec:results}.

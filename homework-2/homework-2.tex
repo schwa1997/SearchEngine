@@ -1,0 +1,132 @@
+\documentclass{ceurart}
+
+\usepackage{acronym}
+\usepackage{subcaption}
+\usepackage{natbib}
+\usepackage{enumitem}
+
+\renewcommand{\acffont}[1]{\textsl{#1}}
+
+%%
+%% end of the preamble, start of the body of the document source.
+\begin{document}
+
+%%
+%% Rights management information.
+%% CC-BY is default license.
+\copyrightyear{2023}
+\copyrightclause{Copyright for this paper by its authors.\\
+  Use permitted under Creative Commons License Attribution 4.0
+  International (CC BY 4.0).}
+
+%%
+%% This command is for the conference information
+\conference{CLEF 2023: Conference and Labs of the Evaluation Forum, September 18--21, 2023, Thessaloniki, Greece}
+
+%%
+%% The "title" command
+\title{SEUPD@CLEF: Team JIHUMING on Enhancing Search Engine Performance with Character N-Grams, Query Expansion, and Named Entity Recognition}
+
+\title[mode=sub]{Notebook for the LongEval Lab at CLEF 2023}
+
+%%
+%% The "author" command and its associated commands are used to define
+%% the authors and their affiliations.
+\author[1]{Isil Atabek}[%
+email=isil.atabek@studenti.unipd.it
+]
+
+\author[1]{Huimin Chen}[%
+email=huimin.chen@studenti.unipd.it
+]
+
+\author[1]{Jes\'us Moncada-Ram\'irez}[%
+email=jesus.moncadaramirez@studenti.unipd.it
+]
+
+\author[1]{Nicol\`o Santini}[%
+email=nicolo.santini.1@studenti.unipd.it
+]
+
+\author[1]{Giovanni Zago}[%
+email=giovanni.zago.3@studenti.unipd.it
+]
+
+\author[1]{Nicola Ferro}[%
+orcid=0000-0001-9219-6239,
+email=ferro@dei.unipd.it,
+url=http://www.dei.unipd.it/~ferro/,
+]
+
+\address[1]{University of Padua, Italy}
+
+%%
+%% The abstract is a short summary of the work to be presented in the
+%% article.
+\begin{abstract}
+  % Presentation
+  Our group will propose a novel search engine for the Longitudinal Evaluation of Model Performance (LongEval) task at
+  CLEF 2023~\cite{LongEval};
+  it will also be the final work of the subject Search Engines at the University of Padova.
+  % Objective
+  Our system focuses on the short-term and long-term temporal persistence of the systems' performance, for a collection
+  of both English and French documents.
+  % Approach
+  Our approach involves considering both English and French versions of the documents using whitespace tokenization,
+  stopword removal and stemming.
+  We generate character N-grams to identify recurring word structures (as prefixes or suffixes) repeated over documents.
+  We also use query expansion with synonyms (in English) and some Natural Language Processing (NLP) techniques as Named
+  Entity Recognition (NER) to further refine our system.
+  The similarity function utilized in our approach is BM25.
+  Our system was developed in Java and primarily utilized the Lucene library.
+  % Experiments
+  After extensive experiments on these techniques, we came up with five systems that have produced the best results in
+  terms of MAP and NDCG scores.
+  We analyzed these five selected systems by examining their MAP, NDCG, and Rprec scores on the test data.
+  Additionally, we performed a Two-Way ANOVA to assess the AP of these systems.
+  To compare our systems with each other, we will utilize the Tukey Honestly Significant Difference (HSD) test.
+  % Results
+  In summary, our analysis indicates that incorporating French queries enhances search results, larger N-gram sizes
+  contribute to improved effectiveness, while our NER approach negatively affects the scores.
+\end{abstract}
+
+%%
+%% Keywords. The author(s) should pick words that accurately describe
+%% the work being presented. Separate the keywords with commas.
+\begin{keywords}
+  CLEF 2023 \sep
+  Information retrieval \sep
+  LongEval \sep
+  English \sep
+  French \sep
+  Search Engines
+\end{keywords}
+
+%%
+%% This command processes the author and affiliation and title
+%% information and builds the first part of the formatted document.
+\maketitle
+
+\input{section/introduction}
+
+\input{section/related}
+
+\input{section/methodology}
+
+\input{section/architecture}
+
+\input{section/setup}
+
+%\input{section/runs_selection}
+
+\input{section/results}
+
+\input{section/conclusion}
+
+%% Define the bibliography file to be used
+\bibliography{bibliography,proceedings}
+
+\input{acronyms}
+
+
+\end{document}

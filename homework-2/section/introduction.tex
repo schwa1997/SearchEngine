@@ -1,0 +1,40 @@
+\section{Introduction}
+\label{sec:introduction}
+
+% Our group and what are we doing
+This report aims at providing a brief explanation of the Information Retrieval system built as a team project during the
+Search Engine course 22/23 of the master's degree in Computer Engineering and Data Science at the University of Padua,
+Italy.
+As a group in this subject, we are participating in 2023 CLEF LongEval: Longitudinal Evaluation of Model
+Performance~\cite{LongEval}.
+This annual evaluation campaign focuses on evaluating the temporal persistence of information retrieval (IR) systems and
+text classifiers.\\
+
+% The LongEval corpus
+The LongEval collection relies on a large set of data provided by Qwant (a commercial privacy-focused
+search engine that was launched in France in 2013).
+Their idea regarding the dataset was to reflect changes of the Web across time, providing
+evolving document and query sets.
+The train collection~\cite{traindata} consists of 1,570,734 documents, 672 queries, 98 held-out queries, and 9656
+evaluation assessments.
+The documents were chosen based on queries using the Qwant click model, in addition to random selection from the Qwant
+index.
+The queries are categorized into twenty topics, such as: car-related, antivirus-related, employment-related,
+energy-related, recipe-related, etc.
+In addition to the original French version, the collection also includes English translations of the documents and
+queries using the CUBBITT~\cite{CUBBITT} system.
+The test collection~\cite{testdata} for the short-term persistence sub-task was gathered during July 2022, comprising
+1,593,376 documents and 882 queries.
+The test collection for the long-term persistence sub-task was collected in September 2022, containing 1,081,334
+documents and 923 queries.
+We will also use the test collection evaluation assessments~\cite{test_qrels} provided for the short-term, long-term and
+held-out queries.\\
+
+% Organization
+The paper is organized as follows: Section~\ref{sec:related} introduces related works;
+Section~\ref{sec:methodology} briefly describes our approach;
+Section~\ref{sec:architecture} describes our code in detail;
+Section~\ref{sec:setup} explains our experimental setup;
+Section~\ref{sec:results} discusses how we selected and which are the five systems submitted to the competition, in
+addition to an analysis on the test collections and our main findings;
+finally, Section~\ref{sec:conclusion} draws some conclusions and outlooks for future work.

@@ -1,0 +1,91 @@
+\section{Related Work}
+\label{sec:related}
+
+There are many search engines using different techniques to enhance retrieval effectiveness from which we have taken
+inspiration from.\\
+
+% About our techniques
+The BM25~\cite{BM25} similarity function is widely used information retrieval as it considers term frequencies and
+document length.
+This function has demonstrated effectiveness in balancing precision and recall in search results, even if it
+doesn't consider meta-data document information as other approaches~\cite{robertson2009probabilistic} do.
+Whitespace tokenization has not been the primary focus of research in any study, anyway, it seems to provide a useful
+baseline for tokenization.
+In contrast, E. Gow-Smith et al.~\cite{gowsmith2022improving} suggests that allowing tokens to include spaces causes problems,
+especially in architectures including transformers.
+Token lowercasing is also a recurring method in information retrieval~\cite{manning2008introduction}, mainly because it
+reduces the vocabulary size. In order to implement BM25 similarity function and tokenization, both for English documents and 
+for French documents, we used whitespace tokenization and lowercasing using libraries provided by Lucene. 
+We implemented the tokenization in order to get advantages 
+in the vocabulary size, using it in each class which implement 
+the analyzer for that specific documents set. While our system
+adopts whitespace tokenization, we acknowledge these concerns and are open to exploring alternative tokenization 
+methods in future iterations.\\
+
+The Terrier~\cite{OunisEtAl2006} stopword list has been used in plenty of search engines because of the good results if
+offers working with web documents as blogs~\cite{ounis2009overview} or even recommender systems. \\
+For French documents we could not use Terrier stopword list, so we had to find another one\cite{stopword-fr}.
+Stopowords list are stored as .txt files wich we read and use in analyze classes. Each class obviously will read French stopword list if the document set is the French one, otherwise it use the Terrier stopword list. \\
+
+Another basic information retrieval technique used in our search engine has been stemming.
+We have relied on the work of A. G. Jivani et al.\cite{jivani2011comparative} to get an overview of the most adequate
+stemming techniques for our documents.
+For the English documents we have chosen a minimal stemmer developed by D. K. Harman~\cite{Harman1991HowEI}.
+For the French documents we have also used a minimal stemmer developed by J. Savoy~\cite{frenchStemmer}. Also stemmers are implemented in analyzer classes and are used the minimal stemmers classes provided by Lucene library.\\
+
+We have used query expansion~\cite{efthimiadis1996query} in order to broaden the search scope by including synonyms
+related to the original query. These synonyms come from WordNet~\cite{Fellbaum1998}, a popular lexical database that provides semantic relationships
+between words.\\
+
+We have also included character N-grams of the English and French versions of the documents.
+Our experiments on character N-grams have been focus on comparing how the value of \textit{N} can affect to the
+retrieval effectiveness.
+Our motivation for this study stemmed from the works of T. Wilson et al.~\cite{wilson2008comparing}, and J.
+Goodman~\cite{goodman2001bit}, which also explored the impact of different N-gram models (among others) on performance.
+We tried to refine our results including Named Entity Recognition~\cite{mohit2014named}.
+This technique has proven useful in other information retrieval systems addressing for example the
+food~\cite{popovski2020survey} or the archaeology~\cite{brandsen2022can} domain. We implemented character N-gram and NER in separated classes, used only for these scopes. In order to appreciate the results of doing different running and calculate scores for each one, we can choose in the class builder the number N of character. Doing this it is possible to appreciate the performance differences between different values of N. 
+Synonyms are instead implemented only for the English analyzer every time an EnglishAnalyzer is instantiated it try to read and map a synonyms list. \\
+
+
+% About our approach
+The work from F. Cai et al.~\cite{cai2014learning} remarks the importance of understanding query temporal dynamics for search result ranking.By considering the temporal patterns of queries and incorporating query temporal dynamics into the ranking process,
+search engines can deliver more relevant and timely results.An example of this is giving more weight to recent queries or adjusting the ranking based on a certain popularity during
+specific time periods. In the context of our task, with changing datasets, learning and estimating query temporal dynamics can be highly
+relevant.\\
+
+The work from K. Hofmann et al.~\cite{hofmann2014evaluating} presents valuable insights into evaluation methodologies for
+temporal aspects in web search systems. Specifically, the paper explores metrics for evaluating retrieval effectiveness over time, such as precision, recall,
+F-1 score, and mean average precision (MAP). The paper provides insights into various setups, including time-sliced evaluation, incremental evaluation, and
+evaluation with simulated temporal queries. These setups can serve as a basis for designing experimental setups that align with specific task requirements.
+With this motivation we can incorporate evaluation methodologies, metrics, and experimental setups specifically tailored
+for temporal information retrieval.\\
+
+To compare, the work by F. Cai et al.~\cite{cai2014learning} focuses 
+on learning to estimate query temporal dynamics for web search. 
+Their study aims to understand the temporal patterns of queries 
+and incorporate this knowledge into the ranking process, thereby delivering more 
+relevant and timely search results. This research addresses the importance of considering the 
+temporal aspect of queries to improve retrieval effectiveness.\\
+
+On the other hand, the work of K. Hofmann et al.~\cite{hofmann2014evaluating} concentrates on evaluating web search systems while considering the dimension of time. Their paper explores evaluation methodologies specifically tailored to temporal aspects, such as time-sliced evaluation,  incremental evaluation, and evaluation with simulated temporal queries. By proposing and examining these evaluation  setups, the authors provide insights into assessing the performance of search engines in a temporal context.\\
+
+When comparing the work of F. Cai et al.~\cite{cai2014learning} and K. Hofmann et al.~\cite{hofmann2014evaluating}, it is 
+evident that they address different aspects of temporal information retrieval. While F. Cai et al. 
+focus on learning and estimating query temporal dynamics, K. Hofmann et al. concentrate on evaluating the effectiveness 
+of search systems over time. Both papers contribute to the field of temporal information retrieval by providing 
+novel insights and methodologies.\\
+
+In the context of our search engine, we acknowledge the importance of understanding 
+query temporal dynamics, as emphasized by F. Cai et al.~\cite{cai2014learning}. By 
+considering the temporal patterns of queries and incorporating them into our ranking process, 
+we strive to deliver more relevant and timely search results. Furthermore, the evaluation 
+methodologies presented by K. Hofmann et al. [23] serve as a valuable reference for assessing 
+the performance of our search engine in a temporal context. While our specific implementations 
+and techniques may differ, the underlying principles and motivations align with the 
+contributions of these referenced papers in the field of temporal information retrieval.\\
+
+
+
+
+

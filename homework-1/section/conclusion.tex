@@ -1,0 +1,18 @@
+\section{Conclusions and Future Work}
+\label{sec:conclusion}
+
+In summary, the IR systems developed in this study followed the Parsing-Analyzer-Index-Search-Topic paradigm and
+utilized different methodologies, among which the following stand out: processing of English documents based on
+whitespace tokenization, the TERRIER stopword list, query expansion and stemming;
+processing of French documents based on whitespace tokenization, a stopword list and stemming;
+character N-grams of both versions concatenated;
+and NER information extraction using NLP techniques.\\
+We evaluated the performance of the 12 systems we developed by measuring the effectiveness of runs on the training data, comprising both French and translated English queries and documents.
+To assess the quality of these runs, we used the MAP and NDCG scores calculated by \texttt{trec\_eval}.
+Among these systems, five models performed the best, namely \texttt{fr\_fr\_5gram}, \texttt{fr\_fr\_4gram}, \texttt{fr\_fr\_3gram}, \texttt{fr\_fr}, and \texttt{fr\_fr\_4gram\_ner}, listed in order of their scores
+from highest to lowest for both MAP and NDCG.\\
+In terms of future work, there are several areas that could be explored to improve the effectiveness of the developed IR systems.
+Firstly, we could improve indexing methodologies, such as increasing the value of N of N-gram, as we have commented on in Section~\ref{sec:results}.
+Secondly, we could explore better NLP techniques to improve the accuracy of the IR systems, as NER turns out not to be very effective. \\
+One last possible future work could be a machine-learning based IR system. Using training data, we could train a model to predict the best N for N-grams, the best analyzer, and the best index for a given query and document.
+This would be a more dynamic approach to IR systems, as it would be able to adapt to different types of queries and documents.

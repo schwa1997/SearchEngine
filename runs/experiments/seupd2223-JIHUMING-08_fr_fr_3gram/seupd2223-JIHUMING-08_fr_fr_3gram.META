@@ -1,0 +1,48 @@
+System Name: 08_fr_fr_3gram
+Description (short description of the system):
+    This system uses French queries.
+    It considers the French version of the documents and character 3-grams generated from both versions.
+    The preprocessing of the French documents is based on whitespace tokenization, breaking of words and numbers based
+    on special characters, lowercasing, applying a French stopword list and stemming.
+    To generate the character N-grams we consider only the letters of the documents (i.e. discarding numbers and
+    punctuation).
+************
+System Details. Please provide as many details as possible here, so it is possible to reproduce your run.
+
+Ranking Methods (Which ranking approaches does the system use?):
+    BM25
+Data Used (Which data were used to train and fine-tune the system? Please be as concrete as possible and use the exact reference whenever possible):
+    We used the test data (short-term and long-term) and the train data (heldout queries) provided by the organizers.
+Software Used (Which software and tools did you use for training, tunning and running your system? Please be as concrete as possible, provide a reference to your code if possible, and provide the exact software version, whenever applicable):
+    Java JDK version 17, Apache version 2, Lucene version 9.5, and Maven.
+Pre-processing and Indexing (What pre-processing and indexing does the system use? Please be as concrete as possible and provide the details and the setup of the tools):
+    The preprocessing of the French documents is based on whitespace tokenization, breaking of words and numbers based
+    on special characters, lowercasing, applying a French stopword list and stemming.
+    To generate the character N-grams we consider only the letters of the documents (i.e. discarding numbers and
+    punctuation).
+    Similarity function BM25.
+System Combination / Fusion (Does the system combine different retrieval models? If so, how are they combined?):
+    Not implemented.
+Multi-stage Retrieval (Is system single-stage or does it use reranking? If multi-stage, which rerankers are used?):
+    Single-stage.
+Translations (Does the system use French documents or the translations? If translations, which ones?):
+    French documents and English documents to generate character 3-grams.
+
+Resources (How much GPU, CPU, memory, ... did you use for pre-processing and inference steps? Did you use any commercial cloud services?):
+    All the experiments were carried out in a personal computer with CPU 11th Gen Intel(R) Core(TM) i7-1165G7 @ 2.80GHz
+    and 16Gb of RAM.
+The Costs (How long did pre-processing and inference take?):
+    It took approximately one hour to generate the index.
+
+************
+Yes/No Questions
+
+Did you use any statistical ranking model? (yes/no): yes
+Did you use any deep neural network model? (yes/no): no
+Did you use a sparse neural model? (yes/no): no
+Did you use a dense neural model? (yes/no): no
+Did you use more than a single retrieval model? (yes/no): no
+Did you use French or English documents (French/English/both): both
+Did you use provided English translations (yes/no): yes
+Did you use any manual intervention on the translations? (yes/no): no
+Did you use any manual intervention on the results? (yes/no): no

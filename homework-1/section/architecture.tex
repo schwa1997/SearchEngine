@@ -1,0 +1,183 @@
+\section{System Architecture}\label{sec:architecture}
+
+In this section, we address the technical aspects of how our system was developed.
+Some parts of the code we are going to present are inspired in the repositories developed by Professor Nicola Ferro and
+presented to us during the Search Engine course.
+We will follow the structure (in packages) of the repository~\cite{jihuming}.
+
+\subsection{Parsing}\label{subsec:parsing}
+
+To generate an index based on the provided documents, first, we have to parse them;
+this is, get their text into Java data structures.
+All this parser package has been developed following the instructions provided by the organizers.\\
+
+We decided to use the \textbf{JSON} version of the documents because they can easily be manipulated and queried using a
+variety of tools and libraries.
+In our case, because of the large number of documents we are working with, we had to create a \textbf{streaming} parser,
+that allocates into the main memory only one document at a time.
+Thus, our parser is based on the Java library \texttt{Gson} including streaming funtionalities.\\
+
+The whole parser is made up of the following classes:
+\begin{itemize}
+    \item \texttt{DocumentParser}: an abstract class representing a streaming parser.
+          Implements \texttt{Iterator} and \text{Iterable}.
+    \item \texttt{JsonDocument}: a Java POJO for the deserialization of JSON documents.
+    \item \texttt{ParsedDocument}: represents a document already parsed.
+          Note that this class only contains an identifier and a body.
+    \item \texttt{LongEvalParser}: real parser implementing the class \texttt{DocumentParser}.
+          Here is where the streaming logic is implemented.
+          Objects of this class can be used as iterators that yield parsed documents.
+\end{itemize}
+
+\subsection{Analyzer}\label{subsec:analyzer}
+
+To process the already parsed documents' text, we have implemented our own Lucene analyzers.
+All of them follow the typical workflow: use a \texttt{Tokenizer} and a list of \texttt{TokenFilter} to a
+\texttt{TokenStream}.\\
+
+The final version of the project creates an index with four fields for each document.
+Because of this, we had to create \textbf{four different analyzers}.
+Note that we are not taking into account the first field which is the id, obviously presented in the index, to which no
+processing is applied.
+All the following described analyzers use some functionalities from the helper class \texttt{AnalyzerUtil} developed by
+Nicola Ferro.
+We will explain them independently.\\
+
+\subsubsection{English body field}
+The processing applied to the English version of the documents (in the class \texttt{EnglishAnalyzer}) is the following:
+\begin{enumerate}
+    \item Tokenize based on whitespaces.
+    \item Eliminate some strange characters found in the documents.
+          It is unlikely that a user would perform a query including these characters.
+    \item Delete punctuation marks at the beginning and end of words.
+          Necessary as we are using the whitespace tokenizer (for example: "address," or "city.").
+    \item Apply the \texttt{WordDelimiterGraphFilter} Lucene filter.
+          It splits words into subwords and performs optional transformations on subword groups.
+          We decided to include the following operations:
+          \begin{enumerate}
+              \item Divide words into different subwords based on the lower/upper case.
+                    Example: "PowerShot" converted into tokens "Power" and "Shot".
+              \item Divide numbers into different parts based on special characters located in intermediate positions.
+                    Example: "500-42" converted into "500" and "42".
+              \item Concatenate numbers with special characters located in intermediate positions.
+                    Example "500-42" converted into "50042".
+              \item Remove the trailing "s" of English possessives.
+                    Example: "O'Neil's" converted into "O" and "Neil".
+              \item Always maintain the original terms.
+                    Example: the tokens "PowerShot", "500-42", and "O'Neil's" will be maintained.
+          \end{enumerate}
+    \item Lowercase all the tokens.
+    \item Apply the Terrier~\cite{OunisEtAl2006} stopword list.
+    \item Apply query expansion with synonyms using \texttt{SynonymTokenFilter} from Lucene, which is based on the
+          WordNet synonym map~\cite{wordnet}.
+          A maximum of 10 synonyms can be added to each term.
+    \item Apply a minimal stemming process using \texttt{EnglishMinimalStemFilter} from Lucene.
+    \item Delete tokens that may have been left empty because of the previous filters.
+          For this, we created a custom token filter, \texttt{EmptyTokenFilter} implementing \texttt{FilteringTokenFilter}.
+\end{enumerate}
+
+\subsubsection{French body field}
+The processing of French documents (in the class \texttt{FrenchAnalyzer}) is identical to the processing of English
+documents in the first 5 points (excluding the English possessives' removal in 4.d).
+For this point on, we apply:
+\begin{enumerate}[start=6]
+    \item Apply a French stopword list~\cite{stopword_french}.
+    \item Apply a minimal stemming process (in French) using \texttt{FrenchMinimalStemFilter} from Lucene.
+    \item Delete empty tokens (\texttt{EmptyTokenFilter}).
+\end{enumerate}
+
+\subsubsection{Character N-grams}
+Character N-grams are created in the analyzer class \texttt{NGramAnalyzer}, which performs the following operations:
+\begin{enumerate}
+    \item Tokenize based on whitespaces.
+    \item Lowercase all the tokens.
+    \item Delete all characters except letters.
+          Note that we also maintain the French accent letters.
+          After conducting tests on character N-grams with numbers, which resulted in many meaningless numbers being generated, we made the decision to avoid including them.
+    \item Delete empty tokens (\texttt{EmptyTokenFilter}).
+    \item Generate character N-grams using \texttt{NGramTokenFilter} from Lucene.
+\end{enumerate}
+The value of N has not been fixed in order to allow for the generation of different experiments.
+See Section~\ref{sec:setup} for more details.
+
+\subsubsection{NER extracted information}
+The NER information has been extracted using the Apache OpenNLP~\cite{ApacheOpenNLP} library.
+As Lucene does not include these functionalities directly, we have used a modified version of a token filter developed
+by Nicola Ferro based on the mentioned library, (\texttt{OpenNLPNERFilter}).\\
+
+The processing of the tokens in this analyzer (\texttt{NERAnalyzer}) is the following:
+\begin{enumerate}
+    \item Tokenize using a standard tokenizer, \texttt{StandardTokenizer} from Lucene.
+    \item Apply NER using a tagger model for locations.
+    \item Apply NER using a tagger model for person names.
+    \item Apply NER using a tagger model for organizations and companies.
+\end{enumerate}
+
+\subsection{Index}\label{subsec:index}
+
+During the initial stages of the project, we developed an indexer that took into account only one version of the
+documents (either English or French);
+this can be found in the class \texttt{DirectoryIndexer}.
+As soon as we decided to consider both versions of the documents, we marked it as \texttt{Deprecated} and developed
+the \texttt{MultilingualDirectoryIndexer} class, that is the final version of our indexer.\\
+
+As previously mentioned, \texttt{MultilingualDirectoryIndexer} is used for indexing multilingual documents, but also for
+retrieving basic statistics about the resulting index's vocabulary.
+To create an instance of this indexer, several parameters must be provided, such as the paths to the directories where
+the English and French documents are stored, the path to the directory where the index will be created, and the expected
+number of documents to be indexed.
+It must also receive instances of our custom analyzers, i.e., \texttt{EnglishAnalyzer}, \texttt{FrenchAnalyzer},
+\texttt{NGramAnalyzer}, and \texttt{NERAnalyzer}, which will be used for tokenizing and processing the text of the
+documents.
+In addition, we must provide the similarity function used for indexing (we decided to use BM25) and the size of the RAM
+buffer used during indexing.\\
+
+During indexing, \texttt{MultilingualDirectoryIndexer} reads the documents from the directory of the English files, the
+directory of the French files and processes them using the specified analyzers to create an inverted index.
+Note that for the process to conclude properly, both directories must contain the same number of files, the files must
+contain the same number of documents and the documents must have the same ID\@.
+In other words, at each iteration, the indexer accesses the two versions (English and French) of the same document, to
+create a single Lucene document in the index.\\
+
+After indexing, we have used a method to print some statistics about the resulting index's vocabulary.
+This method prints the total number of unique terms, the total number of terms and a list of terms with their frequency
+for both English and French vocabularies.
+This functionality has proven to be highly useful as it provides an overview of the indexed vocabulary.
+This overview can be utilized for further analysis and optimization of the search system.
+Another useful feature of the indexer is the ability to estimate the remaining time required for the indexing process.
+This is particularly valuable as we have observed that these processes can be time-consuming.\\
+
+\subsection{Search}\label{subsec:search}
+The search package (only made up of the class \texttt{Searcher}) is in charge of doing the effective search, i.e.,
+searching in the created indexes for the topics/queries specified.
+In our case we will search the queries provided from LongEval~\cite{traindata}.\\
+
+The searcher will first apply the explained analyzers to the query title, in order to generate a text that can be
+matched with the corresponding index fields.
+This process is performed by relying on the \texttt{QueryParser} class from Lucene.
+After this, the title of the query is searched in the appropriate index fields using the similarity function
+BM25.\\
+
+To perform a query, we must specify: the path of the index, the path of the topics file, the number of expected topics,
+a run descriptor, and the maximum number of documents to be retrieved (1000).
+To facilitate the execution of all experiments, we have created a menu where users can select the desired run to execute
+after specifying the required paths and parameters.
+This menu determines which document fields and analyzers shall be used, depending on the run identifier.
+It also allows distinguishing between train and test data.\\
+
+\subsection{Topic}\label{subsec:topic}
+
+To read the queries (in TREC format) we couldn't use the class \textbf{TrecTopicsReader} already included in Lucene.
+This class expects queries to be in a more specific format than the one provided by the organizers.
+Thus, we developed our LongEval topic reader in the package \texttt{topic}, containing the classes
+\texttt{LongEvalTopic} and \texttt{LongEvalTopicReader}.
+Note that we kept the name "TopicReader", but what our \texttt{LongEvalTopicReader} does is reading all the queries,
+not the topics.
+Thus:
+\begin{itemize}
+    \item \texttt{LongEvalTopic} is a simple Java POJO representing each query provided by LongEval.
+          Each query has a number (\texttt{<num>}) and a title (\texttt{<title>}).
+          It is the equivalent of \texttt{QualityQuery} when working with \textbf{TrecTopicsReader}.
+    \item \texttt{LongEvalTopicReader} is the query reader we developed.
+          It considers the query file as an XML file and parses it using the Java XML library.
+\end{itemize}
